@@ -18,7 +18,7 @@ export const validate = (song: Object) => {
         duration: joi.string().required(),
     });
     return joiSchema.validate(song);
-};
+};  
 
 export const songModel = mongoose.model('song', songSchema);
 
