@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import * as joi from 'joi';
 
-const objectId = mongoose.Schema.Types.ObjectId;
+const objectId = mongoose.Schema.Types.ObjectId; 
 
 const playlistSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -22,5 +22,5 @@ export const validate = (playlist: Object) => {
     return joiSchema.validate(playlist);
 };
 
-export const playlistModel = mongoose.model('playlist', playlistSchema);
+export const PlaylistModel = mongoose.model('playlist', playlistSchema);
 

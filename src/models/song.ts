@@ -20,5 +20,5 @@ export const validate = (song: Object) => {
     return joiSchema.validate(song);
 };  
 
-export const songModel = mongoose.model('song', songSchema);
+export const SongModel = mongoose.model('song', songSchema);
 

@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     month: { type: String, required: true },
     platLists: { type: [String], default: [] },
     likedSongs: { type: [String], default: [] },
-    isAdmin: { type: Boolean, default: false } 
+    isAdmin: { type: Boolean, default: false }   
 });
 
 userSchema.methods.generateAuthToken = () => {
@@ -38,5 +38,5 @@ export const validate = (user: object) => {
     return joiSchema.validate(user);
 };
 
-export const userModel = mongoose.model('user', userSchema); 
+export const UserModel = mongoose.model('user', userSchema); 
 
