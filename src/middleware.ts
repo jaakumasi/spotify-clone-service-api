@@ -9,6 +9,26 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     jwt.verify(token, process.env.JWTKEY, (err, validToken) => {
         if (err) return res.status(400).send({ message: 'Invalid token' });
         else {
+            console.log('validToken: ', validToken);
+            // @ts-ignore
+            req.user = validToken;
+            next();
+        }
+    });
+}
+
+export const admin = (req: Request, res: Response, next: NextFunction) => {
+    const token = req.header('x-auth-token');
+    if (!token) return res.status(400).send({ message: 'Access Denied! No token provided' });
+
+    jwt.verify(token, process.env.JWTKEY, (err, validToken) => {
+        if (err) return res.status(400).send({ message: 'Invalid token' });
+        else {
+            // @ts-ignore
+            console.log('validToken.isAdmin: ', validToken.isAdmin);
+            // @ts-ignore
+            if (!validToken.isAdmin)
+                return res.status(403).send({ message: 'Access Denied !' });
             // @ts-ignore
             req.user = validToken;
             next();
@@ -18,6 +38,6 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
 export const validateObjectID = (req: Request, res: Response, next: NextFunction) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.id))  // verify that user id is a valid bson ObjectId
-        return res.status(404).send('Invalid ID');
+        return res.status(404).send({message: 'Invalid ID'});
     next();
 }

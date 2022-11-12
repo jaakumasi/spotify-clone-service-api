@@ -12,13 +12,13 @@ const userSchema = new mongoose.Schema({
     month: { type: String, required: true },
     platLists: { type: [String], default: [] },
     likedSongs: { type: [String], default: [] },
-    isAdmin: { type: Boolean, default: false }   
+    isAdmin: { type: Boolean, default: false }
 });
 
 userSchema.methods.generateAuthToken = () => {
     const token = jwt.sign(
         // @ts-ignore
-        { _id: this._id, name: this.name, isAdmin: this.isAdmin },
+        { _id: this._id, name: this.name },
         process.env.JWTKEY,
         { expiresIn: '7d' }
     )
@@ -38,5 +38,5 @@ export const validate = (user: object) => {
     return joiSchema.validate(user);
 };
 
-export const UserModel = mongoose.model('user', userSchema); 
+export const UserModel = mongoose.model('user', userSchema);
 
