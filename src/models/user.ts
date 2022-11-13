@@ -15,11 +15,8 @@ const userSchema = new mongoose.Schema({
     isAdmin: { type: Boolean, default: false }
 });
 
-userSchema.methods.generateAuthToken = (user: Object) => {
-    // @ts-ignore
-    console.log('id: ', user._id, 'name: ', user.name);
+userSchema.methods.generateAuthToken = (user: Object | any) => {
     const token = jwt.sign(
-        // @ts-ignore
         { _id: user._id, name: user.name, isAdmin: user.isAdmin },
         process.env.JWTKEY,
         { expiresIn: '7d' }
