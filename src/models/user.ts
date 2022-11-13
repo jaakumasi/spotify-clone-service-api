@@ -15,10 +15,12 @@ const userSchema = new mongoose.Schema({
     isAdmin: { type: Boolean, default: false }
 });
 
-userSchema.methods.generateAuthToken = () => {
+userSchema.methods.generateAuthToken = (user: Object) => {
+    // @ts-ignore
+    console.log('id: ', user._id, 'name: ', user.name);
     const token = jwt.sign(
         // @ts-ignore
-        { _id: this._id, name: this.name },
+        { _id: user._id, name: user.name, isAdmin: user.isAdmin },
         process.env.JWTKEY,
         { expiresIn: '7d' }
     )
@@ -34,6 +36,7 @@ export const validate = (user: object) => {
         date: joi.string().required(),
         year: joi.string().required(),
         month: joi.string().required(),
+        isAdmin: joi.boolean()
     });
     return joiSchema.validate(user);
 };

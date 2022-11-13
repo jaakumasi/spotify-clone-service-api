@@ -34,6 +34,7 @@ usersRouter.get('/', admin, async (req: express.Request, res: express.Response) 
 // get user by id
 usersRouter.get('/:id', [validateObjectID, auth], async (req: express.Request, res: express.Response) => {
     const user = await UserModel.findById(req.params.id).select('-password -__v');
+    if (!user) return res.status(203).send({ message: 'No user with that id exists' });
     return res.status(200).send({ data: user });
 });
 
@@ -51,6 +52,12 @@ usersRouter.put('/:id', [validateObjectID, auth], async (req: express.Request, r
 usersRouter.delete('/:id', [validateObjectID, admin], async (req: express.Request, res: express.Response) => {
     await UserModel.findByIdAndDelete(req.params.id);
     return res.status(200).send({ message: 'User successfully deleted' });
+});
+
+// delete all users
+usersRouter.delete('/', [validateObjectID, admin], async (req: express.Request, res: express.Response) => {
+    await UserModel.deleteMany();
+    return res.status(200).send({ message: 'Users successfully deleted' });
 });
 
 export default usersRouter;

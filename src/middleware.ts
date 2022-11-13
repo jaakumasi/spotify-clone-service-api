@@ -6,12 +6,13 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('x-auth-token');
     if (!token) return res.status(400).send({ message: 'Access Denied! No token provided' });
 
-    jwt.verify(token, process.env.JWTKEY, (err, validToken) => {
+    jwt.verify(token, process.env.JWTKEY, (err, user) => {
         if (err) return res.status(400).send({ message: 'Invalid token' });
         else {
-            console.log('validToken: ', validToken);
             // @ts-ignore
-            req.user = validToken;
+            console.log('user: ', user)
+            // @ts-ignore
+            req.user = user;
             next();
         }
     });
@@ -21,16 +22,16 @@ export const admin = (req: Request, res: Response, next: NextFunction) => {
     const token = req.header('x-auth-token');
     if (!token) return res.status(400).send({ message: 'Access Denied! No token provided' });
 
-    jwt.verify(token, process.env.JWTKEY, (err, validToken) => {
+    jwt.verify(token, process.env.JWTKEY, (err, user) => {
         if (err) return res.status(400).send({ message: 'Invalid token' });
         else {
             // @ts-ignore
-            console.log('validToken.isAdmin: ', validToken.isAdmin);
+            console.log('user: ', user);
             // @ts-ignore
-            if (!validToken.isAdmin)
+            if (!user.isAdmin)
                 return res.status(403).send({ message: 'Access Denied !' });
             // @ts-ignore
-            req.user = validToken;
+            req.user = user;
             next();
         }
     });
