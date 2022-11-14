@@ -2,7 +2,8 @@ import * as express from 'express';
 import dbConnection from './db';
 import usersRouter from './routes/users';
 import authRouter from './routes/auth';
-import test from './routes/test';
+import test from './routes/test';   // temporary
+import songsRouter from './routes/songs';
 require('express-async-errors');
 require('dotenv').config();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 // using routers
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/login', authRouter);
+app.use('/api/v1/songs', songsRouter);
 
 // temporary
 app.use('/api/v1/test', test);

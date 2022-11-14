@@ -40,11 +40,7 @@ usersRouter.get('/:id', [validateObjectID, auth], async (req: express.Request, r
 
 // update user by id
 usersRouter.put('/:id', [validateObjectID, auth], async (req: express.Request, res: express.Response) => {
-    const user = await UserModel.findByIdAndUpdate(
-        req.params.id,
-        { $set: req.body },
-        { new: true }
-    ).select('-password -__v');
+    const user = await UserModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true }).select('-password -__v');
     return res.status(200).send({ data: user });
 });
 

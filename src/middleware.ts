@@ -10,8 +10,6 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
         if (err) return res.status(400).send({ message: 'Invalid token' });
         else {
             // @ts-ignore
-            console.log('user: ', user)
-            // @ts-ignore
             req.user = user;
             next();
         }
@@ -26,8 +24,7 @@ export const admin = (req: Request, res: Response, next: NextFunction) => {
         if (err) return res.status(400).send({ message: 'Invalid token' });
         else {
             // @ts-ignore
-            if (!user.isAdmin)
-                return res.status(403).send({ message: 'Access Denied !' });
+            if (!user.isAdmin) return res.status(403).send({ message: 'Access Denied !' });
             // @ts-ignore
             req.user = user;
             next();
