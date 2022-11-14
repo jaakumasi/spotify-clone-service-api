@@ -5,7 +5,7 @@ import { admin } from '../middleware';
 
 const authRouter = express.Router();
 
-authRouter.post('/', admin, async (req: express.Request, res: express.Response) => {
+authRouter.post('/', async (req: express.Request, res: express.Response) => {
     const user = await UserModel.findOne({ email: req.body.email }); 
     if (!user || !await bcrypt.compare(req.body.password, user.password))
         return res.status(400).send({ message: 'Invalid email or password' });
