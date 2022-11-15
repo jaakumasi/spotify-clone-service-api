@@ -47,7 +47,6 @@ songsRouter.put('/like/:id', [validateObjectID, auth], async (req: express.Reque
 
     let resMessage = '';
     if (index === -1) {
-        // @ts-ignore
         user.likedSongs.push(song._id);
         resMessage = 'Added to liked songs';
     }

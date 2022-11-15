@@ -7,7 +7,7 @@ const playlistSchema = new mongoose.Schema({
     name: { type: String, required: true },
     user: { type: objectId, ref: 'user', required: true },
     desc: { type: String },
-    songs: {type: Array, default: []},
+    songs: {type: [objectId], default: []},
     img: { type: String }
 });
 
@@ -17,7 +17,7 @@ export const validate = (playlist: Object) => {
         user: joi.string().required(),
         desc: joi.string().allow(''),
         songs: joi.array().items(joi.string()),
-        img: joi.string().required() 
+        img: joi.string().allow('') 
     });
     return joiSchema.validate(playlist);
 };

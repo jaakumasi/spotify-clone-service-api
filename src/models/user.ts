@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import * as joi from 'joi';
 
+const objectId = mongoose.Schema.Types.ObjectId;
+
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -10,8 +12,8 @@ const userSchema = new mongoose.Schema({
     date: { type: String, required: true },
     year: { type: String, required: true },
     month: { type: String, required: true },
-    platLists: { type: [String], default: [] },
-    likedSongs: { type: [String], default: [] },
+    playlists: { type: [objectId], default: [] },
+    likedSongs: { type: [objectId], default: [] },
     isAdmin: { type: Boolean, default: false }
 });
 
@@ -32,8 +34,7 @@ export const validate = (user: object) => {
         gender: joi.string().valid('male', 'female', 'other').required(),
         date: joi.string().required(),
         year: joi.string().required(),
-        month: joi.string().required(),
-        isAdmin: joi.boolean()
+        month: joi.string().required()
     });
     return joiSchema.validate(user);
 };

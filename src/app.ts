@@ -3,7 +3,7 @@ import dbConnection from './db';
 import usersRouter from './routes/users';
 import authRouter from './routes/auth';
 import songsRouter from './routes/songs';
-import playlistRouter from './routes/playlist';
+import playlistRouter from './routes/playlists';
 require('express-async-errors');
 require('dotenv').config();
 
@@ -15,6 +15,6 @@ app.use(express.json());
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/login', authRouter);
 app.use('/api/v1/songs', songsRouter);
-app.use('/api/v1/playlist', playlistRouter);
+app.use('/api/v1/playlists', playlistRouter);
 
 app.listen(process.env.PORT, () => console.log(`server running port ${process.env.PORT}...`));
