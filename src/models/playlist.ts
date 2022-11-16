@@ -17,7 +17,7 @@ export const validate = (playlist: Object) => {
         user: joi.string().required(),
         desc: joi.string().allow(''),
         songs: joi.array().items(joi.string()),
-        img: joi.string().allow('') 
+        img: joi.string().allow('')  
     });
     return joiSchema.validate(playlist);
 };

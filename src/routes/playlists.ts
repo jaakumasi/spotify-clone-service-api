@@ -5,7 +5,7 @@ import { admin, auth, validateObjectID } from '../middleware';
 import * as joi from 'joi';
 import { SongModel } from '../models/song';
 /**
- * router for 
+ * router for CREATING and EDITING playlists as well as ADDING, REMOVING and DELETING songs from playlists 
  */
 const playlistRouter = express.Router();
 
@@ -20,6 +20,52 @@ playlistRouter.post('/', auth, async (req: express.Request, res: express.Respons
     await user.save();
 
     return res.status(201).send({ data: playlist });
+})
+
+// add song to playlist
+playlistRouter.post('/add-song', auth, async (req: express.Request, res: express.Response) => {
+    const joiSchema = joi.object({
+        playlistId: joi.string().required(),
+        songId: joi.string().required()
+    });
+    const { error } = joiSchema.validate(req.body);
+    if (error) res.status(400).send({ message: error.details[0].message });
+
+    const playlist = await PlaylistModel.findById(req.body.playlistId);
+    if (!playlist) return res.status(404).send({ message: 'playlist not found' });
+
+    const song = await SongModel.findById(req.body.songId);
+    if (!song) return res.status(404).send({ message: 'song not found' });
+    // add song to playlist only if its not already in it
+    if (playlist.songs.indexOf(req.body.songId) === -1) {
+        playlist.songs.push(req.body.songId);
+        await playlist.save();
+        return res.status(200).send({ message: 'song has been added to playlist', data: playlist });
+    }
+    else
+        return res.status(400).send({ message: 'song is already in the playlist' });
+})
+
+// remove song from playlist
+playlistRouter.put('/remove-song', async (req: express.Request, res: express.Response) => {
+    const joiSchema = joi.object({
+        playlistId: joi.string().required(),
+        songId: joi.string().required()
+    });
+    const { error } = joiSchema.validate(req.body);
+    if (error) res.status(400).send({ message: error.details[0].message });
+
+    const playlist = await PlaylistModel.findById(req.body.playlistId);
+    if (!playlist) return res.status(404).send({ message: 'playlist not found' });
+
+    const song = await SongModel.findById(req.body.songId);
+    if (!song) return res.status(404).send({ message: 'song not found' });
+
+    const index = playlist.songs.indexOf(req.body.songId);
+    playlist.songs.splice(index, 1);
+    await playlist.save();
+
+    return res.status(200).send({ message: 'song has been removed from playlist', data: playlist });
 })
 
 // edit playlist by id
@@ -41,49 +87,6 @@ playlistRouter.put('/:id', [validateObjectID, auth], async (req: express.Request
     await playlist.save();
 
     return res.status(200).send({ message: 'playlist successfully updated', data: playlist });
-})
-
-// add song to playlist
-playlistRouter.post('/add-song', auth, async (req: express.Request, res: express.Response) => {
-    const joiSchema = joi.object({
-        playlistId: joi.string().required(),
-        songId: joi.string().required()
-    });
-    const { error } = joiSchema.validate(req.body);
-    if (error) res.status(400).send({ message: error.details[0].message });
-
-    const playlist = await PlaylistModel.findById(req.body.playlistId);
-    if (!playlist) return res.status(404).send({ message: 'playlist not found' });
-
-    const song = await SongModel.findById(req.body.songId);
-    if (!song) return res.status(404).send({ message: 'song not found' });
-    // add song to playlist only if its not already in it
-    if (playlist.songs.indexOf(req.body.songId) === -1) playlist.songs.push(req.body.songId);
-    await playlist.save();
-
-    return res.status(200).send({ message: 'song has been added to playlist', data: playlist });
-})
-
-// remove song from playlist
-playlistRouter.put('/remove-song', auth, async (req: express.Request, res: express.Response) => {
-    const joiSchema = joi.object({
-        playlistId: joi.string().required(),
-        songId: joi.string().required()
-    });
-    const { error } = joiSchema.validate(req.body);
-    if (error) res.status(400).send({ message: error.details[0].message });
-
-    const playlist = await PlaylistModel.findById(req.body.playlistId);
-    if (!playlist) return res.status(404).send({ message: 'playlist not found' });
-
-    const song = await SongModel.findById(req.body.songId);
-    if (!song) return res.status(404).send({ message: 'song not found' });
-
-    const index = playlist.songs.indexOf(req.body.songId);
-    playlist.songs.splice(index, 1);
-    await playlist.save();
-
-    return res.status(200).send({ message: 'song has been removed from playlist', data: playlist });
 })
 
 // get playlist by id
