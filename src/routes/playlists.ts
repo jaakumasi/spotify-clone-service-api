@@ -7,7 +7,7 @@ import { SongModel } from '../models/song';
 /**
  * router for CREATING and EDITING playlists as well as ADDING, REMOVING and DELETING songs from playlists 
  */
-const playlistRouter = express.Router();
+const playlistRouter = express.Router(); 
 
 // create playlist
 playlistRouter.post('/', auth, async (req: express.Request, res: express.Response) => {
